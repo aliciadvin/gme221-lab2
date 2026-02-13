@@ -45,3 +45,6 @@ Questions:
 - Why is classification considered part of the analysis process?
 - Is classification sensitive to sliver geometries or topology errors?
 - Would changing the dominance threshold alter spatial patterns?
+
+QGIS Spatial Classification Interpretation
+insert reflection here
