@@ -28,8 +28,20 @@ The final output is exported as a GeoJSON file for visualization in QGIS.
 
 ## Reflection
 Interpreting GIS IO in Practice
+insert reflection here
 
 Questions:
 - What is the difference between storing geometry in PostGIS and representing it in GeoPandas?
 - Why is this step considered Input (IO) rather than analysis?
 - How does this relate to the “Input / Process / Output” structure of GIS algorithms discussed in Lecture 3?
+
+Spatial Process and Classification
+insert reflection here
+
+Questions:
+- Why is CRS transformation necessary before area computation?
+- How does CRS choice affect area accuracy?
+- Does the overlay create new spatial units that did not previously exist?
+- Why is classification considered part of the analysis process?
+- Is classification sensitive to sliver geometries or topology errors?
+- Would changing the dominance threshold alter spatial patterns?
