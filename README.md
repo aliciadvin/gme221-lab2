@@ -25,3 +25,11 @@ The final output is exported as a GeoJSON file for visualization in QGIS.
 ## Outputs 
 - GeoJSON file: `output/dominant_residential.geojson`
 - Visualization in QGIS
+
+## Reflection
+Interpreting GIS IO in Practice
+
+Questions:
+- What is the difference between storing geometry in PostGIS and representing it in GeoPandas?
+- Why is this step considered Input (IO) rather than analysis?
+- How does this relate to the “Input / Process / Output” structure of GIS algorithms discussed in Lecture 3?
