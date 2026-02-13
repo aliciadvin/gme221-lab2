@@ -1,0 +1,76 @@
+import geopandas as gpd 
+from sqlalchemy import create_engine 
+
+# Database connection parameters 
+host = "localhost" 
+port = "5432" 
+dbname = "gme221" 
+user = "postgres" 
+password = "spatialalicia7" 
+
+# Create the connection string 
+conn_str = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}" 
+
+# Create SQLAlchemy engine 
+engine = create_engine(conn_str)
+
+# Minimal SQL queries (no spatial operations) 
+sql_parcel = "SELECT parcel_pin, geom FROM public.parcel" 
+sql_landuse = "SELECT name, geom FROM public.landuse" 
+
+# Load data into GeoDataFrames 
+parcels = gpd.read_postgis(sql_parcel, engine, geom_col="geom") 
+landuse = gpd.read_postgis(sql_landuse, engine, geom_col="geom") 
+
+# print(parcels.head()) 
+# print(landuse.head())
+
+# To check initial CRS — EPSG: 4326
+# print(parcels.crs) 
+# print(landuse.crs) 
+# print(parcels.geometry.type.unique()) 
+# print(landuse.geometry.type.unique())
+
+# Reproject to EPSG:3395 for area calculations 
+parcels = parcels.to_crs(epsg=3395) 
+landuse = landuse.to_crs(epsg=3395)
+
+# print(parcels.head())
+
+# To check reprojection — EPSG: 3395
+# print(parcels.crs) 
+# print(landuse.crs) 
+
+# print(parcels.geometry)
+
+parcels["total_area"] = parcels.geometry.area 
+# print(parcels["total_area"])
+# print(parcels.head())
+
+overlay = gpd.overlay(parcels, landuse, how="intersection") 
+overlay["landuse_area"] = overlay.geometry.area 
+# print(overlay.head())
+
+overlay["percentage"] = ( overlay["landuse_area"] / overlay["total_area"] ) * 100 
+
+overlay["percentage"] = overlay["percentage"].round(2) 
+# print(overlay.head())
+
+dominant_nonres = overlay[ 
+    (overlay["name"] == "Commercial Industrial Zone") & 
+     (overlay["percentage"] >= 50) 
+].copy() 
+
+print(dominant_nonres.head())
+
+dominant_nonres = dominant_nonres.to_crs(epsg=4326)
+
+# To check final CRS — EPSG: 4326
+# print(dominant_nonres.crs) 
+
+dominant_nonres.to_file(
+    "output/challenge_result.geojson", 
+    driver="GeoJSON" 
+) 
+
+print("GeoJSON saved successfully.")

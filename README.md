@@ -48,3 +48,10 @@ Questions:
 
 QGIS Spatial Classification Interpretation
 insert reflection here
+
+Challenge Analysis Reflection
+insert reflection here
+
+- What spatial question did you choose?
+- What algorithmic steps did you design?
+- How does your logic differ from the guided example?
