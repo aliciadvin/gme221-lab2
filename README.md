@@ -28,14 +28,15 @@ The final output is exported as a GeoJSON file for visualization in QGIS.
 
 ## Reflection
 Interpreting GIS IO in Practice
-insert reflection here
 
-Questions:
-- What is the difference between storing geometry in PostGIS and representing it in GeoPandas?
-- Why is this step considered Input (IO) rather than analysis?
-- How does this relate to the “Input / Process / Output” structure of GIS algorithms discussed in Lecture 3?
+In PostGIS, geometry is stored as a spatial data type within a database. It is saved in a format that allows indexing and SQL-based queries suitable for storage and retrieval. In GeoPandas, geometry is represented as Shapely objects inside a GeoDataFrame in Python. This allows spatial operations such as area calculation and overlays to be performed. Overall, PostGIS is for storing and efficiently querying spatial data, while GeoPandas is for manipulating and analyzing spatial data.
+
+This step is considered Input (IO) rather than analysis because we did not perform any spatial computation or algorithm. The SQL query used (e.g. SELECT parcel_pin, geom FROM public.parcel) merely retrieved existing geometry and attributes from the database. We also only converted the storage format (database geometry) into a computational format (GeoDataFrame with Shapely objects). Thus, this was data retrieval, not spatial analysis.
+
+At this point in the laboratory exercise, we are still in the Input phase because we only retrieved data from the database and translated it into a computational structure. The purpose of this is to prepare the spatial data so that algorithms can operate on them in the next phase—Process.
 
 Spatial Process and Classification
+
 insert reflection here
 
 Questions:
@@ -47,9 +48,11 @@ Questions:
 - Would changing the dominance threshold alter spatial patterns?
 
 QGIS Spatial Classification Interpretation
+
 insert reflection here
 
 Challenge Analysis Reflection
+
 insert reflection here
 
 - What spatial question did you choose?

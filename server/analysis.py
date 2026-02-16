@@ -25,7 +25,7 @@ landuse = gpd.read_postgis(sql_landuse, engine, geom_col="geom")
 # print(parcels.head()) 
 # print(landuse.head())
 
-# To check initial CRS — EPSG: 4326
+# To check initial CRS — EPSG: 4326 and geometry type
 # print(parcels.crs) 
 # print(landuse.crs) 
 # print(parcels.geometry.type.unique()) 
@@ -55,6 +55,23 @@ overlay["percentage"] = ( overlay["landuse_area"] / overlay["total_area"] ) * 10
 
 overlay["percentage"] = overlay["percentage"].round(2) 
 # print(overlay.head())
+
+# get dominant land use for per parcel 
+idx = overlay.groupby("parcel_pin")["percentage"].idxmax() 
+
+dominant = overlay.loc[idx, ["parcel_pin", "name", "percentage"]] 
+
+# dissolve (aggregate) by parcel_pin to get percentage and dominant land use 
+geom = overlay[["parcel_pin","geometry"]].dissolve( 
+    by="parcel_pin").reset_index() 
+
+# merge dominant land use back to dissolved geometries 
+overlay = geom.merge( 
+    dominant, 
+    on="parcel_pin", 
+    how="left" ) 
+
+print(overlay.head())
 
 dominant_res = overlay[ 
     ((overlay["name"] == "Residential Zone - Low Density") | 
