@@ -56,8 +56,26 @@ overlay["percentage"] = ( overlay["landuse_area"] / overlay["total_area"] ) * 10
 overlay["percentage"] = overlay["percentage"].round(2) 
 # print(overlay.head())
 
+# get dominant land use for per parcel 
+idx = overlay.groupby("parcel_pin")["percentage"].idxmax() 
+
+dominant = overlay.loc[idx, ["parcel_pin", "name", "percentage"]] 
+
+# dissolve (aggregate) by parcel_pin to get percentage and dominant land use 
+geom = overlay[["parcel_pin","geometry"]].dissolve( 
+    by="parcel_pin").reset_index() 
+
+# merge dominant land use back to dissolved geometries 
+overlay = geom.merge( 
+    dominant, 
+    on="parcel_pin", 
+    how="left" ) 
+
+print(overlay.head())
+
 dominant_nonres = overlay[ 
-    (overlay["name"] == "Commercial Industrial Zone") & 
+    ((overlay["name"] != "Residential Zone - Low Density") & 
+     (overlay["name"] != "Residential Zone - Medium Density")) & 
      (overlay["percentage"] >= 50) 
 ].copy() 
 
